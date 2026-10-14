@@ -3,7 +3,7 @@ package battleship;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.apache.commons.lang3.time.StopWatch;
+
 import java.util.concurrent.TimeUnit;
 
 import java.util.*;
@@ -287,18 +287,7 @@ public class Game implements IGame
 
 		assert in != null;
 
-		// 1. Criar e iniciar o cronómetro
-		StopWatch watch = new StopWatch();
-		watch.start();
-
 		String input = in.nextLine().trim();
-
-		// 2. Parar o cronómetro imediatamente após o Enter
-		watch.stop();
-
-		// 3. Calcular e imprimir o tempo de resposta
-		long tempoEmSegundos = watch.getTime(TimeUnit.SECONDS);
-		System.out.println(" Demoraste " + tempoEmSegundos + " segundos a pensar e a introduzir esta rajada!");
 
 		// Criar lista para armazenar os tiros
 		List<IPosition> shots = new ArrayList<>();
