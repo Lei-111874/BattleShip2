@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang3.time.StopWatch;
 
 /**
  * The type Tasks.
@@ -42,10 +43,14 @@ public class Tasks {
 
 		IFleet myFleet = null;
 		IGame game = null;
+
 		menuHelp();
 
-		System.out.print("> ");
 		Scanner in = new Scanner(System.in);
+		StopWatch relogio = new StopWatch();
+
+		System.out.print("> ");
+		relogio.start();
 		String command = in.next();
 		while (!command.equals(DESISTIR)) {
 
@@ -70,7 +75,11 @@ public class Tasks {
 					break;
 				case RAJADA:
 					if (game != null) {
-						game.readEnemyFire(in);
+						game.readEnemyFire(in); // Lê as coordenadas
+
+						relogio.stop(); // Para a contagem
+						System.out.println("Tempo demorado a jogar: " + (relogio.getTime() / 1000.0) + " segundos.");
+
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
 
@@ -124,6 +133,10 @@ public class Tasks {
 					System.out.println("Que comando é esse??? Repete ...");
 			}
 			System.out.print("> ");
+
+			relogio.reset(); // Repõe o cronómetro a zeros
+			relogio.start(); // Volta a arrancar para cronometrar a próxima jogada
+
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
