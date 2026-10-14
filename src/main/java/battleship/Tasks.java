@@ -35,7 +35,7 @@ public class Tasks {
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
 	private static final String PDF = "pdf";
-
+	private static final String JANELA = "janela";
 	/**
 	 * This task also tests the fighting element of a round of three shots
 	 */
@@ -88,6 +88,8 @@ public class Tasks {
 							System.exit(0);
 						}
 					}
+				case JANELA:
+					GraphicalBoard.show(game);
 					break;
 				case SIMULA:
 					if (game != null) {
@@ -157,6 +159,7 @@ public class Tasks {
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("- " + PDF + ": Exporta as jogadas da partida para um ficheiro PDF.");
+		System.out.println("- " + JANELA + ": Abre uma janela visual com a representação gráfica do tabuleiro.");
 		System.out.println("===============================================================");
 	}
 	/**
