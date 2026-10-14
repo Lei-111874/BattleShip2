@@ -139,6 +139,7 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.14.0</version>
+		</dependency>
         <!--dependência para criar o pdf-->
 		<dependency>
 			<groupId>com.github.librepdf</groupId>
