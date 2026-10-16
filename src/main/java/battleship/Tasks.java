@@ -35,7 +35,8 @@ public class Tasks {
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
 	private static final String PDF = "pdf";
-	private static final String JANELA = "janela";
+	private static final String CARREGAR = "Carregar";
+
 	/**
 	 * This task also tests the fighting element of a round of three shots
 	 */
@@ -86,6 +87,11 @@ public class Tasks {
 						if (game.getRemainingShips() == 0) {
 							game.over();
 							System.exit(0);
+						} else {
+							boolean foiGuardado = Save_LoadGame.perguntar_guardar(game, in);
+							if (foiGuardado) {
+								menu();
+							}
 						}
 					}
 				case JANELA:
@@ -130,7 +136,23 @@ public class Tasks {
 						System.out.println("Cria primeiro uma partida com gerafrota ou lefrota.");
 					}
 					break;
+				case CARREGAR:
+					System.out.println("\n--- CARREGAR JOGO GUARDADO ---");
 
+					// Invoca a função que trata da escolha, leitura e reconstrução do jogo
+					IGame jogoCarregado = Save_LoadGame.fromMap(in);
+
+					if (jogoCarregado != null) {
+						System.out.println("Jogo carregado com sucesso!");
+
+						// Atribui o jogo restaurado à variável do jogo atual e inicia a sessão
+						game = jogoCarregado;
+						game.printMyBoard(true, true);
+					} else {
+						System.out.println("Não foi possível carregar o jogo.");
+
+					}
+					break;
                 default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}

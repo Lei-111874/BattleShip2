@@ -146,11 +146,11 @@
 			<artifactId>openpdf</artifactId>
 			<version>1.2.3</version>
 		</dependency>
-		<!-- Biblioteca FlatLaf para a interface gráfica -->
+		<!-- Jackson: converter objetos Java em JSON e vice-versa -->
 		<dependency>
-			<groupId>com.formdev</groupId>
-			<artifactId>flatlaf</artifactId>
-			<version>3.4.1</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.17.2</version>
 		</dependency>
 	</dependencies>
 
