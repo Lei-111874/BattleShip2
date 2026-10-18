@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang3.time.StopWatch;
 
 /**
  * The type Tasks.
@@ -34,7 +35,7 @@ public class Tasks {
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
 	private static final String PDF = "pdf";
-
+	private static final String JANELA = "janela";
 	/**
 	 * This task also tests the fighting element of a round of three shots
 	 */
@@ -42,10 +43,14 @@ public class Tasks {
 
 		IFleet myFleet = null;
 		IGame game = null;
+
 		menuHelp();
 
-		System.out.print("> ");
 		Scanner in = new Scanner(System.in);
+		StopWatch relogio = new StopWatch();
+
+		System.out.print("> ");
+		relogio.start();
 		String command = in.next();
 		while (!command.equals(DESISTIR)) {
 
@@ -70,7 +75,11 @@ public class Tasks {
 					break;
 				case RAJADA:
 					if (game != null) {
-						game.readEnemyFire(in);
+						game.readEnemyFire(in); // Lê as coordenadas
+
+						relogio.stop(); // Para a contagem
+						System.out.println("Tempo demorado a jogar: " + (relogio.getTime() / 1000.0) + " segundos.");
+
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
 
@@ -79,6 +88,8 @@ public class Tasks {
 							System.exit(0);
 						}
 					}
+				case JANELA:
+					GraphicalBoard.show(game);
 					break;
 				case SIMULA:
 					if (game != null) {
@@ -124,6 +135,10 @@ public class Tasks {
 					System.out.println("Que comando é esse??? Repete ...");
 			}
 			System.out.print("> ");
+
+			relogio.reset(); // Repõe o cronómetro a zeros
+			relogio.start(); // Volta a arrancar para cronometrar a próxima jogada
+
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
@@ -144,6 +159,7 @@ public class Tasks {
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("- " + PDF + ": Exporta as jogadas da partida para um ficheiro PDF.");
+		System.out.println("- " + JANELA + ": Abre uma janela visual com a representação gráfica do tabuleiro.");
 		System.out.println("===============================================================");
 	}
 	/**
