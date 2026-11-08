@@ -22,7 +22,7 @@ public class Barge extends Ship {
 		// Add the single position of the barge to the list of positions
 		getPositions().add(new Position(pos.getRow(), pos.getColumn()));
 	}
-	public void testarMetodoLongo(int param1, int param2, int param3, int param4, int param5) {
+	public void testarMetodoLongo(int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, int param10) {
 		// Método criado propositadamente para testar o Long Parameter List
 	}
 }
