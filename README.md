@@ -190,3 +190,15 @@ Galeão. Deixamos a exceção das diagonais, mas de forma mais precisa: são as 
 Mapa mental e verificação. Os LLMs perdem o fio ao raciocinar sobre o tabuleiro. Obrigá-los a escrever a grelha e a verificar os 3 tiros antes de responder reduz muito os tiros repetidos e fora do tabuleiro.
 Formato. O JSON vai no fim e sozinho, para o copiarmos sem enganos.
 Pequenas gralhas do texto copiado do PDF (“Quandoorelatório”, “qua drículas”) ficaram corrigidas.
+
+
+## Mapeamento de Code Smells (Martin Fowler vs. Lanza & Marinescu)
+
+| Code Smell (Fowler) | Localização no PDF | Caracterização apresentada pelos autores |
+| :--- | :--- | :--- |
+| **Large Class** | Cap. 3, p. 65 | Classe com demasiadas variáveis de instância ou demasiado código. |
+| **Long Method** | Cap. 3, p. 64 | Método demasiado extenso, difícil de compreender e de decompor. |
+| **Feature Envy** | Cap. 3, p. 66 | Método mais interessado nos dados de outra classe do que nos da própria classe. |
+| **Shotgun Surgery** | Cap. 3, p. 66 | Uma alteração obriga a modificar várias classes diferentes. |
+| **Data Class** | Cap. 3, p. 70–71 | Classe constituída essencialmente por atributos e métodos de acesso, sem comportamento relevante. |
+| **Refused Bequest** | Cap. 3, p. 71 | Subclasse que não utiliza ou não pretende suportar parte das funcionalidades herdadas. |
