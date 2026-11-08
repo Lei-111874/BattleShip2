@@ -1,0 +1,14 @@
+name: "Profile-12345-LongMethod"
+inspections:
+  - inspection: OverlyComplexMethod
+    enabled: true
+    options:
+      m_limit: 10
+  - inspection: OverlyLongMethod
+    enabled: true
+    options:
+      m_limit: 30
+  - inspection: MethodWithTooManyParameters
+    enabled: true
+    options:
+      m_limit: 5
