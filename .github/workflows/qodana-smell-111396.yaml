@@ -22,6 +22,5 @@ jobs:
       
       - uses: JetBrains/qodana-action@v2024.1
         with:
-          args: --config,qodana-111396.yaml
           use-annotations: true
           post-pr-comment: true
