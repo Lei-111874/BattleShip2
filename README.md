@@ -202,3 +202,18 @@ Pequenas gralhas do texto copiado do PDF (“Quandoorelatório”, “qua drícu
 | **Shotgun Surgery** | Cap. 3, p. 66 | Uma alteração obriga a modificar várias classes diferentes. |
 | **Data Class** | Cap. 3, p. 70–71 | Classe constituída essencialmente por atributos e métodos de acesso, sem comportamento relevante. |
 | **Refused Bequest** | Cap. 3, p. 71 | Subclasse que não utiliza ou não pretende suportar parte das funcionalidades herdadas. |
+
+## Passo 4 — Mapeamento de Inspeções do IDE (Code Smell: Long Method)
+
+### Tabela de Mapeamento
+
+| Nome da Inspeção no IDE | ID da Inspeção | Métrica Avaliada | Valor-limite por Omissão (*Default*) | O que **NÃO** é possível expressar com esta inspeção |
+| :--- | :--- | :--- | :--- | :--- |
+| **Overly complex method** | `OverlyComplexMethod` | Complexidade Ciclomática ($CC$) | `10` | Não permite combinar simultaneamente limites de linhas de código ($LOC$) ou aninhamento ($MAXNESTING$) numa única regra composta. |
+| **Overly long method** | `OverlyLongMethod` | Linhas de Código ($LOC$) | `30` | Não distingue linhas de lógica de comentários/espaços, nem avalia a complexidade das ramificações. |
+| **Method with too many parameters** | `MethodWithTooManyParameters` | Número de Parâmetros ($NOPM$) | `5` | Não avalia a complexidade interna do método nem o grau de acoplamento dos tipos passados nos argumentos. |
+
+### Limitações da Inspeção
+* **Falta de Regras Compostas:** Cada inspeção no IDE opera de forma isolada. Não é possível definir uma *Detection Strategy* como a de Lanza & Marinescu para o *Brain Method*, que exige a conjunção lógica simultânea de métricas:
+  $$\text{Brain Method} = (\text{LOC} > 65) \land (\text{CYCLO} > 10) \land (\text{MAXNESTING} \ge 3)$$
+* **Ausência de Métricas de Acesso Externo:** As inspeções de método do IDE não medem o acesso a dados de outras classes ($ATFD$).
