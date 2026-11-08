@@ -1,5 +1,5 @@
 # 12345 - Nome do Aluno
-name: Qodana smell gate 111874
+name: Qodana smell gate Fábio
 
 on:
   pull_request:
@@ -23,6 +23,6 @@ jobs:
 
       - uses: JetBrains/qodana-action@v2026.2
         with:
-          args: --config qodana-111874.yaml
+          args: --config qodana-Fábio.yaml
           use-annotations: true
           post-pr-comment: true
