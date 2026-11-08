@@ -4,9 +4,21 @@ version: "1.0"
 
 linter: jetbrains/qodana-jvm-community:2026.2
 
-projectJDK: 23
+projectJDK: 17
 
 profile:
-  path: .qodana/profiles/profile-12345.yaml
+  base:
+    name: empty
+
+  inspections:
+    - inspection: MethodWithTooManyParameters
+      enabled: true
+      options:
+        m_limit: 5
+
+    - inspection: ConstructorWithTooManyParameters
+      enabled: true
+      options:
+        m_limit: 5
 
 failThreshold: 0
