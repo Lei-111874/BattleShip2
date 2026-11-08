@@ -29,7 +29,7 @@ public class Game implements IGame
 		assert fleet != null;
 		assert moves != null;
 
-		char[][] map = new char[board_size][BOARD_SIZE];
+		char[][] map = new char[BOARD_SIZE][BOARD_SIZE];
 
 		for (int r = 0; r < BOARD_SIZE; r++)
 			for (int c = 0; c < BOARD_SIZE; c++)
@@ -402,17 +402,9 @@ public class Game implements IGame
 	{
 		return this.countRepeatedShots;
 	}
-	public int getRepeatedShots2()
-	{
-		return this.countRepeatedShots;
-	}
 
 	@Override
 	public int getInvalidShots()
-	{
-		return this.countInvalidShots;
-	}
-	public int getInvalidShots2()
 	{
 		return this.countInvalidShots;
 	}
@@ -422,17 +414,9 @@ public class Game implements IGame
 	{
 		return this.countHits;
 	}
-	public int getHits2()
-	{
-		return this.countHits;
-	}
 
 	@Override
 	public int getSunkShips()
-	{
-		return this.countSinks;
-	}
-	public int getSunkShips2()
 	{
 		return this.countSinks;
 	}
@@ -443,22 +427,8 @@ public class Game implements IGame
 		List<IShip> floatingShips = myFleet.getFloatingShips();
 		return floatingShips.size();
 	}
-	public int getRemainingShips2()
-	{
-		List<IShip> floatingShips = myFleet.getFloatingShips();
-		return floatingShips.size();
-	}
 
 	public boolean repeatedShot(IPosition pos)
-	{
-		assert pos != null;
-
-		for (IMove move : alienMoves)
-			if (move.getShots().contains(pos))
-				return true;
-		return false;
-	}
-	public boolean repeatedShot2(IPosition pos)
 	{
 		assert pos != null;
 
