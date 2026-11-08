@@ -1,0 +1,13 @@
+# 111396 Martim Cordeiro
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: MethodWithTooManyParameters
+      enabled: true
+      options:
+        limit: 4
+    - inspection: ConstructorWithTooManyParameters
+      enabled: true
+      options:
+        limit: 4
