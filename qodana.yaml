@@ -3,7 +3,15 @@ version: "1.0"
 linter: jetbrains/qodana-jvm-community:2024.1
 projectJDK: "23"
 profile:
-  path: qodana/profiles/profile-111396.yaml
+  groups:
+    - groupId: ExcludedInspections
+      groups:
+        - "ALL"
+  inspections:
+    - group: ExcludedInspections
+      enabled: false
+    - inspection: ParametersPerMethod
+      enabled: true
 failureConditions:
   severityThresholds:
     any: 0
