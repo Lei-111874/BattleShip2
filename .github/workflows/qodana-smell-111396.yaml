@@ -1,5 +1,5 @@
 # 111396 - Martim Cordeiro
-name: Qodana Long Parameter List Gate 12345
+name: Qodana Long Parameter List Gate 111396
 
 on:
   pull_request:
