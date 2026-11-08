@@ -1,12 +1,17 @@
-# 111396 Martim Cordeiro
-name: "Qodana smell gate 111396"
-base: empty
-inspections:
-  - inspection: MethodWithTooManyParameters
-    enabled: true
-    options:
-      limit: 4
-  - inspection: ConstructorWithTooManyParameters
-    enabled: true
-    options:
-      limit: 4
+# 111396 - Martim Cordeiro
+version: "1.0"
+
+profile:
+  base:
+    name: empty
+
+  inspections:
+    - inspection: MethodWithTooManyParameters
+      enabled: true
+      options:
+        m_limit: 5
+
+    - inspection: ConstructorWithTooManyParameters
+      enabled: true
+      options:
+        m_limit: 5

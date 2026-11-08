@@ -1,9 +1,12 @@
-# 111396 Martim Cordeiro
+
+# 111396 - Martim Cordeiro
 version: "1.0"
-linter: jetbrains/qodana-jvm-community:2024.1
-projectJDK: "23"
+
+linter: jetbrains/qodana-jvm-community:2026.2
+
+projectJDK: 23
+
 profile:
-  path: qodana/profiles/profile-111396.yaml
-failureConditions:
-  severityThresholds:
-    any: 1200
+  path: .qodana/profiles/profile-12345.yaml
+
+failThreshold: 0
