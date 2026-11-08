@@ -281,7 +281,4 @@ public class Tasks {
 			throw new IllegalArgumentException("Formato inválido. Use 'A3', 'A 3' ou similar.");
 		}
 	}
-	public void testarMetodoLongo(int a, int b, int c, int d, int e) {
-		System.out.println("Este método tem parâmetros a mais!");
-	}
 }
