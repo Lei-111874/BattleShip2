@@ -1,8 +1,9 @@
-# 12345 - Configuração do Qodana para Long Method
+# 12345 - Configuração Principal do Qodana
 version: "1.0"
 linter: jetbrains/qodana-jvm-community:2026.2
+projectJDK: "17" # Ou a versão do JDK definida no pom.xml/build.gradle do BattleShip2
 profile:
-  path: .qodana/profiles/profile-12345.yaml
+  path: .qodana/profiles/profile-Fábio.yaml
 failureConditions:
   severityThresholds:
     any: 0
