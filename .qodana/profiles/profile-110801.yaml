@@ -1,0 +1,9 @@
+# 110801 - Hugo Furtado
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: ClassWithTooManyMethods
+      enabled: true
+      options:
+        m_limit: 15

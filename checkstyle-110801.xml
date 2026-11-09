@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<module name="Checker">
+    <property name="severity" value="error"/>
+    <module name="TreeWalker">
+        <module name="ConstantName"/>
+    </module>
+</module>
