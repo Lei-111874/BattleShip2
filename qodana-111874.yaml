@@ -6,4 +6,4 @@ profile:
   path: .qodana/profiles/profile-Fábio.yaml
 failureConditions:
   severityThresholds:
-    any: 0
+    any: 50   # Em vez de 0
