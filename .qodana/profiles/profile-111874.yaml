@@ -1,4 +1,4 @@
-name: "Profile-Fábio-LongMethod"
+name: "Profile-111874-LongMethod"
 inspections:
   - inspection: OverlyComplexMethod
     enabled: true
