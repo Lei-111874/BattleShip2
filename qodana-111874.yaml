@@ -1,9 +1,8 @@
-# 12345 - Configuração Principal do Qodana
 version: "1.0"
 linter: jetbrains/qodana-jvm-community:2026.2
-projectJDK: "17" # Ou a versão do JDK definida no pom.xml/build.gradle do BattleShip2
+projectJDK: "17"
 profile:
-  path: .qodana/profiles/profile-Fábio.yaml
+  path: .qodana/profiles/profile-111874.yaml
 failureConditions:
   severityThresholds:
-    any: 50   # Em vez de 0
+    any: 0
