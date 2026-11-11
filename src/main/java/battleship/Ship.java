@@ -72,6 +72,10 @@ public abstract class Ship implements IShip
         return s;
     }
 
+	public void CalcularPontos() {
+		System.out.println("Teste de violacao do Checkstyle");
+	}
+
     //---------------------------------------------------------
 
 	/**
