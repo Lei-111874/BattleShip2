@@ -1,4 +1,4 @@
-# 111874 - Fábio
+# 111874 - Fábio 
 name: Checkstyle gate 111874
 
 on:
@@ -12,11 +12,11 @@ jobs:
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
-        
+
       - name: Executar Checkstyle Gate
         uses: dbelyaev/action-checkstyle@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           checkstyle_config: checkstyle-111874.xml
           level: error
-          fail_on_error: true
+          fail_level: error
