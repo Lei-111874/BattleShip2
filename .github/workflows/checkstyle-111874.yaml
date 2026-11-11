@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
-
+        
       - name: Executar Checkstyle Gate
         uses: dbelyaev/action-checkstyle@v4
         with:
