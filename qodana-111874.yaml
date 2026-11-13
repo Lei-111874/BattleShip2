@@ -4,6 +4,4 @@ linter: jetbrains/qodana-jvm-community:2026.2
 projectJDK: "17"
 profile:
   path: .qodana/profiles/profile-111874.yaml
-failureConditions:
-  severityThresholds:
-    any: 500
+fail-threshold: 500
