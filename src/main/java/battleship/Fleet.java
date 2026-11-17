@@ -5,6 +5,7 @@ package battleship;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * The type Fleet.
@@ -19,7 +20,10 @@ public class Fleet implements IFleet
 	 * @return a fully constructed and valid fleet as an instance of IFleet
 	 */
 	public static IFleet createRandom() {
+		return createRandom(type -> Ship.buildShip(type, Compass.randomBearing(), Position.randomPosition()));
+	}
 
+	static IFleet createRandom(Function<String, Ship> shipFactory) {
 		IFleet randomFleet = new Fleet();
 
 		// Define the types of ships to be added
@@ -35,7 +39,7 @@ public class Fleet implements IFleet
 		while (fleetSize < shipTypes.length) {
 
 			// Build the ship
-			Ship ship = Ship.buildShip(shipTypes[fleetSize], Compass.randomBearing(), Position.randomPosition());
+			Ship ship = shipFactory.apply(shipTypes[fleetSize]);
 
 			// Attempt to add the ship to the fleet
 			if (ship != null && randomFleet.addShip(ship)) {
