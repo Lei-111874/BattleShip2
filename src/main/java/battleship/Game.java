@@ -131,19 +131,15 @@ public class Game implements IGame
 			simplifiedShots.add(simplePos);
 		}
 
-		String jsonString = null;
+
 		try {
 			// 2. Serialize the simplified list instead of the raw 'shots' list
-			jsonString = objectMapper.writeValueAsString(simplifiedShots);
+            System.out.println(objectMapper.writeValueAsString(simplifiedShots));
+			System.out.println();
+			return objectMapper.writeValueAsString(simplifiedShots);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("Erro ao serializar o JSON", e);
 		}
-
-		System.out.println(jsonString);
-		System.out.println();
-
-		// Retornar o JSON
-		return jsonString;
 	}
 
 	//------------------------------------------------------------------
