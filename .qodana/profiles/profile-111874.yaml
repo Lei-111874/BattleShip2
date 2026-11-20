@@ -1,6 +1,8 @@
 
 # 111874 - Fábio
+version: "1.0"
 profile:
+  name: qodana-111874
   base:
     name: empty
   inspections:
