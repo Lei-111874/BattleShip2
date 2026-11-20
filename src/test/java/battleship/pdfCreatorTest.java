@@ -1,18 +1,31 @@
 package battleship;
 
 import com.lowagie.text.DocumentException;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * Test class for pdfCreator.
+ * Author: ${user.name}
+ * Date: 2026-11-20 13:57
+ * Cyclomatic Complexity:
+ * - constructor: 1
+ * - export: 10
+ */
 class pdfCreatorTest {
 
     private pdfCreator pdfCreator;
@@ -25,130 +38,181 @@ class pdfCreatorTest {
         pdfCreator = new pdfCreator();
     }
 
-    @Test
-    void export_LancaExcecao_QuandoMovesNulo() {
-        String filePath = tempDir.resolve("teste_nulo.pdf").toString();
-
-        Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            pdfCreator.export(null, filePath);
-        });
-
-        Assertions.assertEquals("Não existem jogadas para exportar.", exception.getMessage());
+    @AfterEach
+    void tearDown() {
+        pdfCreator = null;
     }
 
     @Test
-    void export_LancaExcecao_QuandoMovesVazio() {
-        String filePath = tempDir.resolve("teste_vazio.pdf").toString();
-
-        Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            pdfCreator.export(Collections.emptyList(), filePath);
-        });
-
-        Assertions.assertEquals("Não existem jogadas para exportar.", exception.getMessage());
+    @DisplayName("Constructor creates a pdfCreator instance")
+    void pdfCreator() {
+        assertNotNull(pdfCreator, "Error: expected the constructor to create a non-null pdfCreator instance.");
     }
 
     @Test
-    void export_CriaPdfComSucesso_TestandoTodosOsCenariosDeTiro() throws IOException, DocumentException {
-        String filePath = tempDir.resolve("teste_sucesso.pdf").toString();
+    @DisplayName("export1: rejects a null moves list")
+    void export1() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> pdfCreator.export(null, outputPath("null-moves.pdf")),
+                "Error: expected null moves to cause IllegalArgumentException."
+        );
 
-        // 1. Criar um IShip "falso" implementando todos os métodos da interface
-        IShip dummyShip = new IShip() {
-            @Override public String getCategory() { return "DummyShip"; }
-            @Override public Integer getSize() { return 1; }
-            @Override public List<IPosition> getPositions() { return Collections.emptyList(); }
-            @Override public List<IPosition> getAdjacentPositions() { return Collections.emptyList(); }
-            @Override public IPosition getPosition() { return null; }
-            @Override public Compass getBearing() { return null; } // Retorna null pois não é usado aqui
-            @Override public boolean stillFloating() { return false; }
-            @Override public int getTopMostPos() { return 0; }
-            @Override public int getBottomMostPos() { return 0; }
-            @Override public int getLeftMostPos() { return 0; }
-            @Override public int getRightMostPos() { return 0; }
-            @Override public boolean occupies(IPosition pos) { return false; }
-            @Override public boolean tooCloseTo(IShip other) { return false; }
-            @Override public boolean tooCloseTo(IPosition pos) { return false; }
-            @Override public boolean isInsideBoard() { return true; }
-            @Override public void shoot(IPosition pos) { }
-            @Override public void sink() { }
-        };
+        assertEquals(
+                "Não existem jogadas para exportar.",
+                exception.getMessage(),
+                "Error: expected the null-moves exception message to match."
+        );
+    }
 
-        // 2. Criar um IMove "falso"
-        IMove fakeMove = new IMove() {
-            @Override
-            public int getNumber() {
-                return 1;
-            }
+    @Test
+    @DisplayName("export2: rejects an empty moves list")
+    void export2() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> pdfCreator.export(List.of(), outputPath("empty-moves.pdf")),
+                "Error: expected an empty moves list to cause IllegalArgumentException."
+        );
 
-            @Override
-            public List<IPosition> getShots() {
-                return Arrays.asList(
-                        criarFakePosition("A1"),
-                        criarFakePosition("B2"),
-                        criarFakePosition("C3"),
-                        criarFakePosition("D4"),
-                        criarFakePosition("E5")
-                );
-            }
+        assertEquals(
+                "Não existem jogadas para exportar.",
+                exception.getMessage(),
+                "Error: expected the empty-moves exception message to match."
+        );
+    }
 
-            @Override
-            public List<IGame.ShotResult> getShotResults() {
-                return Arrays.asList(
-                        // false, _, _, _ -> Inválido
-                        new IGame.ShotResult(false, false, null, false),
-                        // true, true, _, _ -> Repetido
-                        new IGame.ShotResult(true, true, null, false),
-                        // true, false, navio, true -> Afundado
-                        new IGame.ShotResult(true, false, dummyShip, true),
-                        // true, false, navio, false -> Acertou num navio
-                        new IGame.ShotResult(true, false, dummyShip, false),
-                        // true, false, null, false -> Água
-                        new IGame.ShotResult(true, false, null, false)
-                );
-            }
+    @Test
+    @DisplayName("export3: exports a move with no shots")
+    void export3() throws IOException, DocumentException {
+        String filePath = outputPath("no-shots.pdf");
+        pdfCreator.export(List.of(new Move(1, List.of(), List.of())), filePath);
 
-            @Override
-            public String processEnemyFire(boolean verbose) {
-                return "";
-            }
-        };
+        assertPdfCreated(filePath);
+    }
 
-        List<IMove> moves = Collections.singletonList(fakeMove);
+    @Test
+    @DisplayName("export4: exports a shot when its move has no results")
+    void export4() throws IOException, DocumentException {
+        String filePath = outputPath("no-results.pdf");
+        pdfCreator.export(
+                List.of(new Move(1, List.of(new Position(0, 0)), List.of())),
+                filePath
+        );
 
-        // 3. Executa o método
+        assertPdfCreated(filePath);
+    }
+
+    @Test
+    @DisplayName("export5: labels an invalid shot")
+    void export5() throws IOException, DocumentException {
+        String filePath = outputPath("invalid-shot.pdf");
+        pdfCreator.export(
+                List.of(new Move(
+                        1,
+                        List.of(new Position(0, 0)),
+                        List.of(new IGame.ShotResult(false, false, null, false))
+                )),
+                filePath
+        );
+
+        assertPdfCreated(filePath);
+    }
+
+    @Test
+    @DisplayName("export6: labels a repeated shot")
+    void export6() throws IOException, DocumentException {
+        String filePath = outputPath("repeated-shot.pdf");
+        pdfCreator.export(
+                List.of(new Move(
+                        1,
+                        List.of(new Position(0, 0)),
+                        List.of(new IGame.ShotResult(true, true, null, false))
+                )),
+                filePath
+        );
+
+        assertPdfCreated(filePath);
+    }
+
+    @Test
+    @DisplayName("export7: labels a shot that sinks a ship")
+    void export7() throws IOException, DocumentException {
+        String filePath = outputPath("sunk-ship.pdf");
+        IShip ship = new Barge(Compass.NORTH, new Position(1, 1));
+        pdfCreator.export(
+                List.of(new Move(
+                        1,
+                        List.of(new Position(0, 0)),
+                        List.of(new IGame.ShotResult(true, false, ship, true))
+                )),
+                filePath
+        );
+
+        assertPdfCreated(filePath);
+    }
+
+    @Test
+    @DisplayName("export8: labels a shot that hits a ship without sinking it")
+    void export8() throws IOException, DocumentException {
+        String filePath = outputPath("ship-hit.pdf");
+        IShip ship = new Barge(Compass.NORTH, new Position(1, 1));
+        pdfCreator.export(
+                List.of(new Move(
+                        1,
+                        List.of(new Position(0, 0)),
+                        List.of(new IGame.ShotResult(true, false, ship, false))
+                )),
+                filePath
+        );
+
+        assertPdfCreated(filePath);
+    }
+
+    @Test
+    @DisplayName("export9: labels a valid shot that misses")
+    void export9() throws IOException, DocumentException {
+        String filePath = outputPath("water-shot.pdf");
+        pdfCreator.export(
+                List.of(new Move(
+                        1,
+                        List.of(new Position(0, 0)),
+                        List.of(new IGame.ShotResult(true, false, null, false))
+                )),
+                filePath
+        );
+
+        assertPdfCreated(filePath);
+    }
+
+    @Test
+    @DisplayName("export10: processes multiple moves and loops through the move list")
+    void export10() throws IOException, DocumentException {
+        String filePath = outputPath("multiple-moves.pdf");
+        List<IMove> moves = List.of(
+                new Move(1, List.of(), List.of()),
+                new Move(2, List.of(new Position(0, 0)), List.of())
+        );
         pdfCreator.export(moves, filePath);
 
-        // 4. Verificações (Asserts)
-        File pdfFile = new File(filePath);
-
-        Assertions.assertTrue(pdfFile.exists(), "O ficheiro PDF devia ter sido criado.");
-        Assertions.assertTrue(pdfFile.length() > 0, "O ficheiro PDF não deve estar vazio.");
+        assertPdfCreated(filePath);
     }
 
-    // --- Método Auxiliar para criar o Fake Position ---
+    private String outputPath(String fileName) {
+        return tempDir.resolve(fileName).toString();
+    }
 
-    private IPosition criarFakePosition(String nomePosicao) {
-        return new IPosition() {
-            @Override public int getRow() { return 0; }
-            @Override public int getColumn() { return 0; }
-            @Override public char getClassicRow() { return 'A'; }
-            @Override public int getClassicColumn() { return 1; }
-            @Override public boolean isInside() { return true; }
-            @Override public boolean isAdjacentTo(IPosition other) { return false; }
-            @Override public void occupy() { }
-            @Override public void shoot() { }
-            @Override public boolean isOccupied() { return false; }
-            @Override public boolean isHit() { return false; }
-
-            @Override
-            public List<IPosition> adjacentPositions() {
-                return Collections.emptyList();
-            }
-
-            // O único método da posição que realmente importa para a concatenação de texto no PDF
-            @Override
-            public String toString() {
-                return nomePosicao;
-            }
-        };
+    private void assertPdfCreated(String filePath) {
+        File pdfFile = new File(filePath);
+        assertAll(
+                "PDF output",
+                () -> assertTrue(
+                        pdfFile.exists(),
+                        "Error: expected export to create the PDF file."
+                ),
+                () -> assertTrue(
+                        pdfFile.length() > 0,
+                        "Error: expected the created PDF file to contain data."
+                )
+        );
     }
 }

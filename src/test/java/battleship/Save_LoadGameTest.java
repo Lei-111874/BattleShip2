@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-class Save_LoadGameTest {
+public class Save_LoadGameTest {
 
     private File testDir;
     private final String testFileName = "test_game.json";
@@ -214,10 +214,6 @@ class Save_LoadGameTest {
                 "      \"positions\": [ { \"row\": 2, \"column\": \"B\" } ]\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"category\": \"barca\",\n" +
-                "      \"positions\": [ { \"row\": \"D\", \"column\": 2 } ]\n" +
-                "    },\n" +
-                "    {\n" +
                 "      \"positions\": [ {} ]\n" +
                 "    },\n" +
                 "    {\n" +
@@ -233,15 +229,14 @@ class Save_LoadGameTest {
                 "  \"tirosRepetidos\": \"4\",\n" +
                 "  \"acertos\": \"C\",\n" +
                 "  \"naviosAfundados\": \"nao_numero\",\n" +
-                // Os tiros do inimigo só têm entradas inválidas: assim o parsing é exercitado
-                // mas fireShots() não é chamado (exige um número exato de tiros válidos e
-                // alteraria os contadores restaurados, fazendo falhar as asserções abaixo).
                 "  \"tirosInimigo\": [\n" +
                 "    {\n" +
                 "      \"shots\": [\n" +
-                "        { \"row\": 1 },\n" +
-                "        { \"column\": 3 },\n" +
-                "        null\n" +
+                "        { \"row\": \"D\", \"column\": 2 },\n" +
+                "        { \"row\": 5, \"column\": 6 },\n" +
+                        "        { \"row\": 8, \"column\": 8 },\n" +
+                        "        { \"row\": 1 },\n" +
+                        "        null\n" +
                 "      ]\n" +
                 "    },\n" +
                 "    {\n" +
