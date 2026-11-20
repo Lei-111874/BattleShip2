@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import java.util.concurrent.TimeUnit;
-
 import java.util.*;
 
 public class Game implements IGame
@@ -232,7 +230,7 @@ public class Game implements IGame
 				availablePositions.add(new Position(r, c));
 
 		this.myFleet.getSunkShips().forEach(ship -> ship.getAdjacentPositions().forEach(availablePositions::remove));
-		this.alienMoves.forEach(move ->  availablePositions.removeAll(move.getShots()));
+		removeFiredShots(this, availablePositions);
 
 		List<IPosition> candidateShots = new ArrayList<>(availablePositions);
 
@@ -267,6 +265,10 @@ public class Game implements IGame
 		this.fireShots(shots);
 
 		return Game.jsonShots(shots);
+	}
+
+	private static void removeFiredShots(Game game, Set<IPosition> availablePositions) {
+		game.alienMoves.forEach(move ->  move.getShots().forEach(availablePositions::remove));
 	}
 
 
@@ -454,4 +456,5 @@ public class Game implements IGame
 			System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
 			System.out.println("+--------------------------------------------------------------+");
 	}
+	
 }
