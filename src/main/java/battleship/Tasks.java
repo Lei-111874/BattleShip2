@@ -104,11 +104,7 @@ public class Tasks {
 							game.randomEnemyFire();
 							myFleet.printStatus();
 							game.printMyBoard(true, false);
-							try {
-								Thread.sleep(3000);
-							} catch (InterruptedException e) {
-								Thread.currentThread().interrupt(); // Best practice: restore interrupt status
-							}
+							waitBetweenSimulatedRounds();
 						}
 
 						if (game.getRemainingShips() == 0) {
@@ -165,6 +161,14 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	private static void waitBetweenSimulatedRounds() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt(); // Best practice: restore interrupt status
+		}
 	}
 
 	/**
