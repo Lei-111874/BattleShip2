@@ -226,15 +226,15 @@ public class Game implements IGame
 		// Criar uma instância de Random com uma seed baseada no timestamp atual
 		Random random = new Random(System.currentTimeMillis());
 
-		Set<IPosition> usablePositions = new HashSet<IPosition>();
+		Set<IPosition> availablePositions = new HashSet<IPosition>();
 		for (int r = 0; r < BOARD_SIZE; r++)
 			for (int c = 0; c < BOARD_SIZE; c++)
-				usablePositions.add(new Position(r, c));
+				availablePositions.add(new Position(r, c));
 
-		this.myFleet.getSunkShips().forEach(ship -> usablePositions.removeAll(ship.getAdjacentPositions()));
-		this.alienMoves.forEach(move ->  usablePositions.removeAll(move.getShots()));
+		this.myFleet.getSunkShips().forEach(ship -> ship.getAdjacentPositions().forEach(availablePositions::remove));
+		this.alienMoves.forEach(move ->  availablePositions.removeAll(move.getShots()));
 
-		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
+		List<IPosition> candidateShots = new ArrayList<>(availablePositions);
 
 		// Criar lista para armazenar os tiros
 		List<IPosition> shots = new ArrayList<IPosition>();
