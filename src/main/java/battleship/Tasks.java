@@ -82,7 +82,10 @@ public class Tasks {
 						relogio.stop(); // Para a contagem
 						System.out.println("Tempo demorado a jogar: " + (relogio.getTime() / 1000.0) + " segundos.");
 
-						myFleet.printStatus();
+						IFleet currentFleet = game.getMyFleet();
+						if (currentFleet != null) {
+							currentFleet.printStatus();
+						}
 						game.printMyBoard(true, false);
 
 						if (game.getRemainingShips() == 0) {
@@ -102,7 +105,10 @@ public class Tasks {
 					if (game != null) {
 						while (game.getRemainingShips() > 0){
 							game.randomEnemyFire();
-							myFleet.printStatus();
+							IFleet currentFleet = game.getMyFleet();
+							if (currentFleet != null) {
+								currentFleet.printStatus();
+							}
 							game.printMyBoard(true, false);
 							waitBetweenSimulatedRounds();
 						}
