@@ -7,19 +7,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the Frigate class.
- * Author: ${user.name}
- * Date: ${current_date}
- * Time: ${current_time}
+ * Test class for class Frigate.
+ * Author: fabio
+ * Date: 2026-11-17 10:43
  * Cyclomatic Complexity for each method:
- * - Constructor: 5
- * - getSize: 1
- * - stillFloating: 2
- * - getPositions: 2
- * - getTopMostPos: 2
- * - getBottomMostPos: 2
- * - getLeftMostPos: 2
- * - getRightMostPos: 2
+ * - Frigate(Compass, IPosition): 5
  */
 public class FrigateTest {
 
@@ -37,9 +29,9 @@ public class FrigateTest {
 
 	/**
 	 * Test for the constructor with NORTH bearing.
-	 * Cyclomatic Complexity: 5
 	 */
 	@Test
+	@DisplayName("Constructs a frigate facing north")
 	void testConstructorNorth() {
 		assertNotNull(frigate, "Error: Frigate instance should not be null.");
 		assertEquals("Fragata", frigate.getCategory(), "Error: Frigate category should be 'Fragata'.");
@@ -58,6 +50,7 @@ public class FrigateTest {
 	 * Test for the constructor with EAST bearing.
 	 */
 	@Test
+	@DisplayName("Constructs a frigate facing east")
 	void testConstructorEast() {
 		frigate = new Frigate(Compass.EAST, new Position(5, 5));
 		List<IPosition> positions = frigate.getPositions();
@@ -74,6 +67,7 @@ public class FrigateTest {
 	 * Test for the constructor with WEST bearing.
 	 */
 	@Test
+	@DisplayName("Constructs a frigate facing west")
 	void testConstructorWest() {
 		frigate = new Frigate(Compass.WEST, new Position(5, 5));
 		List<IPosition> positions = frigate.getPositions();
@@ -87,19 +81,42 @@ public class FrigateTest {
 	}
 
 	/**
-	 * Test for the getSize method.
-	 * Cyclomatic Complexity: 1
+	 * Test for the constructor with SOUTH bearing.
 	 */
 	@Test
+	@DisplayName("Constructs a frigate facing south")
+	void testConstructorSouth() {
+		frigate = new Frigate(Compass.SOUTH, new Position(5, 5));
+		List<IPosition> positions = frigate.getPositions();
+
+		assertAll(
+				() -> assertNotNull(frigate, "Error: expected a south-facing frigate but got null"),
+				() -> assertEquals(4, positions.size(), "Error: expected a frigate to occupy four positions"),
+				() -> assertEquals(new Position(5, 5), positions.get(0),
+						"Error: expected the first SOUTH position to match the initial position"),
+				() -> assertEquals(new Position(6, 5), positions.get(1),
+						"Error: expected the second SOUTH position to be one row down"),
+				() -> assertEquals(new Position(7, 5), positions.get(2),
+						"Error: expected the third SOUTH position to be two rows down"),
+				() -> assertEquals(new Position(8, 5), positions.get(3),
+						"Error: expected the fourth SOUTH position to be three rows down")
+		);
+	}
+
+	/**
+	 * Test for the getSize method.
+	 */
+	@Test
+	@DisplayName("Reports the frigate size")
 	void testGetSize() {
 		assertEquals(4, frigate.getSize(), "Error: Frigate size should be 4.");
 	}
 
 	/**
 	 * Test for the stillFloating method (all positions intact).
-	 * Cyclomatic Complexity: 2
 	 */
 	@Test
+	@DisplayName("Reports an undamaged frigate as floating")
 	void testStillFloating1() {
 		assertTrue(frigate.stillFloating(), "Error: Frigate should still be floating.");
 	}
@@ -108,6 +125,7 @@ public class FrigateTest {
 	 * Test for the stillFloating method (one position hit).
 	 */
 	@Test
+	@DisplayName("Reports a frigate with one hit position as floating")
 	void testStillFloating2() {
 		frigate.getPositions().get(0).shoot();
 		assertTrue(frigate.stillFloating(), "Error: Frigate should still be floating with one hit position.");
@@ -117,6 +135,7 @@ public class FrigateTest {
 	 * Test for the stillFloating method (all positions hit).
 	 */
 	@Test
+	@DisplayName("Reports a fully hit frigate as sunk")
 	void testStillFloating3() {
 		frigate.getPositions().forEach(IPosition::shoot);
 		assertFalse(frigate.stillFloating(), "Error: Frigate should not be floating if all positions are hit.");
@@ -124,36 +143,36 @@ public class FrigateTest {
 
 	/**
 	 * Test for the getTopMostPos method.
-	 * Cyclomatic Complexity: 2
 	 */
 	@Test
+	@DisplayName("Gets the topmost frigate row")
 	void testGetTopMostPos() {
 		assertEquals(5, frigate.getTopMostPos(), "Error: The topmost position should be 5.");
 	}
 
 	/**
 	 * Test for the getBottomMostPos method.
-	 * Cyclomatic Complexity: 2
 	 */
 	@Test
+	@DisplayName("Gets the bottommost frigate row")
 	void testGetBottomMostPos() {
 		assertEquals(8, frigate.getBottomMostPos(), "Error: The bottommost position should be 8.");
 	}
 
 	/**
 	 * Test for the getLeftMostPos method.
-	 * Cyclomatic Complexity: 2
 	 */
 	@Test
+	@DisplayName("Gets the leftmost frigate column")
 	void testGetLeftMostPos() {
 		assertEquals(5, frigate.getLeftMostPos(), "Error: The leftmost position should be 5.");
 	}
 
 	/**
 	 * Test for the getRightMostPos method.
-	 * Cyclomatic Complexity: 2
 	 */
 	@Test
+	@DisplayName("Gets the rightmost frigate column")
 	void testGetRightMostPos() {
 		assertEquals(5, frigate.getRightMostPos(), "Error: The rightmost position should be 5.");
 	}
@@ -162,10 +181,11 @@ public class FrigateTest {
 	 * Test for the constructor with invalid input (null).
 	 */
 	@Test
+	@DisplayName("Rejects null constructor arguments")
 	void testConstructorInvalidInput() {
 		assertThrows(NullPointerException.class, () -> new Frigate(null, null),
-				"Error: NullPointerException should be thrown for null input.");
+				"Error: expected a null bearing to throw NullPointerException");
 		assertThrows(NullPointerException.class, () -> new Frigate(Compass.NORTH, null),
-				"Error: NullPointerException should be thrown for null position.");
+				"Error: expected a null position to throw NullPointerException");
 	}
 }

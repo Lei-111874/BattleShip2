@@ -217,3 +217,5 @@ Pequenas gralhas do texto copiado do PDF (“Quandoorelatório”, “qua drícu
 * **Falta de Regras Compostas:** Cada inspeção no IDE opera de forma isolada. Não é possível definir uma *Detection Strategy* como a de Lanza & Marinescu para o *Brain Method*, que exige a conjunção lógica simultânea de métricas:
   $$\text{Brain Method} = (\text{LOC} > 65) \land (\text{CYCLO} > 10) \land (\text{MAXNESTING} \ge 3)$$
 * **Ausência de Métricas de Acesso Externo:** As inspeções de método do IDE não medem o acesso a dados de outras classes ($ATFD$).
+
+### Este projeto utiliza o GitHub Actions com Maven para integração contínua e execução automática dos testes unitários.

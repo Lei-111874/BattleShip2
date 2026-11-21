@@ -147,7 +147,6 @@ public class Save_LoadGame {
                         bearing = Compass.NORTH;
                     }
                 }
-
                 List<Map<String, Object>> posList = (List<Map<String, Object>>) shipMap.get("positions");
 
                 if (posList != null && !posList.isEmpty()) {

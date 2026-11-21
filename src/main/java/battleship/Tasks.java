@@ -37,6 +37,7 @@ public class Tasks {
 	private static final String PDF = "pdf";
 	private static final String CARREGAR = "Carregar";
 	private static final String JANELA = "janela";
+
 	/**
 	 * This task also tests the fighting element of a round of three shots
 	 */
