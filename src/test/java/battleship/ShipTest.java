@@ -236,6 +236,63 @@ public class ShipTest {
         assertEquals(8, ship.getAdjacentPositions().size(), "Error: The number of adjacent positions of a barge in the middle of the tray should be 8.");
         assertEquals(3, shipBorder.getAdjacentPositions().size(), "Error: The number of adjacent positions of a barge in the middle of the tray should be 8.");
     }
+    @Test
+    void constructorNullArguments() {
+        Position validPos = new Position(1, 1);
+        assertThrows(NullPointerException.class,
+                () -> new Barge(null, validPos) {
+                    {
+                        // Garante chamada ao construtor de Ship com bearing nulo
+                    }
+                });
+        assertThrows(NullPointerException.class,
+                () -> new Ship("Barca", Compass.NORTH, null, 1) {
+                });
+        assertThrows(NullPointerException.class,
+                () -> new Ship(null, Compass.NORTH, validPos, 1) {
+                });
+    }
+    @Test
+    void buildShipVariants() {
+        Position pos = new Position(2, 2);
+        assertNotNull(Ship.buildShip("barca", Compass.NORTH, pos));
+        assertNotNull(Ship.buildShip("caravela", Compass.EAST, pos));
+        assertNotNull(Ship.buildShip("nau", Compass.SOUTH, pos));
+        assertNotNull(Ship.buildShip("fragata", Compass.WEST, pos));
+        assertNotNull(Ship.buildShip("galeao", Compass.NORTH, pos));
+        assertNull(Ship.buildShip("inexistente", Compass.NORTH, pos));
+    }
+    @Test
+    void multiPositionShipBoundsAndAdjacents() {
+        Ship frigate = new Frigate(Compass.SOUTH, new Position(1, 4));
+        assertEquals(1, frigate.getTopMostPos());
+        assertEquals(4, frigate.getBottomMostPos());
+        assertEquals(4, frigate.getLeftMostPos());
+        assertEquals(4, frigate.getRightMostPos());
+
+        List<IPosition> adjacents = frigate.getAdjacentPositions();
+        assertFalse(adjacents.isEmpty());
+        for (IPosition p : frigate.getPositions()) {
+            assertFalse(adjacents.contains(p));
+        }
+    }
+    @Test
+    void insideBoardSinkAndToString() {
+        assertTrue(ship.isInsideBoard());
+        assertTrue(shipBorder.isInsideBoard());
+
+        Ship outsideShip = new Frigate(Compass.SOUTH, new Position(8, 5));
+        assertFalse(outsideShip.isInsideBoard());
+
+        ship.sink();
+        assertFalse(ship.stillFloating());
+
+        String text = ship.toString();
+        assertNotNull(text);
+        assertTrue(text.contains(ship.getCategory()));
+        assertTrue(text.contains(ship.getBearing().toString()));
+    }
+
 
 
 }
