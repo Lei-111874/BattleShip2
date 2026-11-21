@@ -1,0 +1,376 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Save_LoadGame</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: Save_LoadGame (battleship)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Save_LoadGame</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,2%
+  </span>
+  <span class="absValue">
+    (81/86)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (127/127)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package battleship;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import com.fasterxml.jackson.databind.SerializationFeature;
+&nbsp;import java.io.File;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.LinkedHashMap;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.Scanner;
+&nbsp;import java.util.List;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Map;
+&nbsp;
+<b class="fc">&nbsp;public class Save_LoadGame {</b>
+&nbsp;    public static boolean perguntar_guardar(IGame game, Scanner scanner) {
+<b class="fc">&nbsp;        System.out.print(&quot;Deseja guardar o jogo? (sim/nao): &quot;);</b>
+<b class="fc">&nbsp;        String resposta = scanner.next().trim();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (resposta.equalsIgnoreCase(&quot;sim&quot;)) {</b>
+<b class="fc">&nbsp;            System.out.print(&quot;Introduza o nome do ficheiro para guardar (ex: jogo.json): &quot;);</b>
+<b class="fc">&nbsp;            String nomeFicheiro = scanner.next().trim();</b>
+&nbsp;
+<b class="fc">&nbsp;            if (!nomeFicheiro.toLowerCase().endsWith(&quot;.json&quot;)) {</b>
+<b class="fc">&nbsp;                nomeFicheiro += &quot;.json&quot;;</b>
+&nbsp;            }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;            return guardar(game, nomeFicheiro);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return false; // O jogo não foi guardado; prossegue normalmente</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean guardar(IGame game, String nomeFicheiro) {
+<b class="fc">&nbsp;        File pasta = new File(&quot;SaveGames&quot;);</b>
+<b class="fc">&nbsp;        if (!pasta.exists()) {</b>
+<b class="fc">&nbsp;            pasta.mkdirs();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        File ficheiroSave = new File(pasta, nomeFicheiro);</b>
+&nbsp;
+<b class="fc">&nbsp;        ObjectMapper mapper = new ObjectMapper();</b>
+<b class="fc">&nbsp;        mapper.enable(SerializationFeature.INDENT_OUTPUT);</b>
+&nbsp;
+<b class="fc">&nbsp;        Map&lt;String, Object&gt; dados = new LinkedHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        dados.put(&quot;tirosJogador&quot;, game.getMyMoves());</b>
+<b class="fc">&nbsp;        dados.put(&quot;tirosInimigo&quot;, game.getAlienMoves());</b>
+<b class="fc">&nbsp;        dados.put(&quot;naviosJogador&quot;, game.getMyFleet().getShips());</b>
+<b class="fc">&nbsp;        dados.put(&quot;naviosInimigo&quot;, game.getAlienFleet().getShips());</b>
+<b class="fc">&nbsp;        dados.put(&quot;tirosInvalidos&quot;, game.getInvalidShots());</b>
+<b class="fc">&nbsp;        dados.put(&quot;tirosRepetidos&quot;, game.getRepeatedShots());</b>
+<b class="fc">&nbsp;        dados.put(&quot;acertos&quot;, game.getHits());</b>
+<b class="fc">&nbsp;        dados.put(&quot;naviosAfundados&quot;, game.getSunkShips());</b>
+<b class="fc">&nbsp;        dados.put(&quot;naviosRestantes&quot;, game.getRemainingShips());</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            mapper.writeValue(ficheiroSave, dados);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Jogo guardado com sucesso em: &quot; + ficheiroSave.getPath());</b>
+&nbsp;
+&nbsp;            // Retorna TRUE SE O FICHEIRO ESTÁ OK
+<b class="fc">&nbsp;            return true;</b>
+&nbsp;        } catch (IOException e) {
+<b class="fc">&nbsp;            System.out.println(&quot;Erro ao guardar o jogo: &quot; + e.getMessage());</b>
+&nbsp;
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static File escolher_ficheiro(Scanner scanner) {
+<b class="fc">&nbsp;        File pasta = new File(&quot;SaveGames&quot;);</b>
+&nbsp;
+<b class="pc">&nbsp;        if (!pasta.exists() || !pasta.isDirectory()) {</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Ainda não existem jogos guardados.&quot;);</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        File[] ficheiros = pasta.listFiles((dir, name) -&gt; name.toLowerCase().endsWith(&quot;.json&quot;));</b>
+&nbsp;
+<b class="pc">&nbsp;        if (ficheiros == null || ficheiros.length == 0) {</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Nenhum jogo guardado encontrado na pasta &quot; + &quot;SaveGames&quot; + &quot;.&quot;);</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(&quot;\n--- JOGOS GUARDADOS ---&quot;);</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; ficheiros.length; i++) {</b>
+<b class="fc">&nbsp;            System.out.println((i + 1) + &quot;. &quot; + ficheiros[i].getName());</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        System.out.print(&quot;Escolha o número do jogo a carregar (ou 0 para cancelar): &quot;);</b>
+<b class="fc">&nbsp;        if (!scanner.hasNextInt()) {</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Opção inválida.&quot;);</b>
+<b class="fc">&nbsp;            scanner.next(); // Limpa token inválido</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        int escolha = scanner.nextInt();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (escolha &lt;= 0 || escolha &gt; ficheiros.length) {</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Operação cancelada ou opção inválida.&quot;);</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return ficheiros[escolha - 1];</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static IGame fromMap(Scanner scanner) {
+<b class="fc">&nbsp;        if (scanner == null) return null;</b>
+&nbsp;
+&nbsp;        // 1. Escolhe o ficheiro JSON a partir da pasta SaveGames
+<b class="fc">&nbsp;        File ficheiroEscolhido = escolher_ficheiro(scanner);</b>
+<b class="fc">&nbsp;        if (ficheiroEscolhido == null) {</b>
+<b class="fc">&nbsp;            return null; // Operação cancelada ou pasta vazia</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // 2. Lê o ficheiro e converte o JSON num Map&lt;String, Object&gt;
+&nbsp;        Map&lt;String, Object&gt; dados;
+&nbsp;        try {
+<b class="fc">&nbsp;            ObjectMapper mapper = new ObjectMapper();</b>
+<b class="fc">&nbsp;            dados = mapper.readValue(ficheiroEscolhido, Map.class);</b>
+&nbsp;        } catch (Exception e) {
+<b class="fc">&nbsp;            System.out.println(&quot;Erro ao ler o ficheiro JSON: &quot; + e.getMessage());</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;Passei 1&quot;);</b>
+&nbsp;        // 3. Reconstrói o jogo a partir do mapa lido
+<b class="fc">&nbsp;        return fromMapData(dados);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;
+&nbsp;    private static Game fromMapData(Map&lt;String, Object&gt; dados) {
+<b class="fc">&nbsp;        if (dados == null) return null;</b>
+&nbsp;
+<b class="fc">&nbsp;        IFleet fleet = new Fleet();</b>
+<b class="fc">&nbsp;        List&lt;Map&lt;String, Object&gt;&gt; naviosJogador = (List&lt;Map&lt;String, Object&gt;&gt;) dados.get(&quot;naviosJogador&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        if (naviosJogador != null) {</b>
+<b class="fc">&nbsp;            for (Map&lt;String, Object&gt; shipMap : naviosJogador) {</b>
+&nbsp;                // 1. Converter categoria para minúsculas para coincidir com o switch do Ship.buildShip
+<b class="fc">&nbsp;                String rawCategory = (String) shipMap.get(&quot;category&quot;);</b>
+<b class="fc">&nbsp;                String category = (rawCategory != null) ? rawCategory.toLowerCase() : &quot;&quot;;</b>
+&nbsp;
+&nbsp;                // 2. Ler a orientação diretamente do JSON (ex: &quot;SOUTH&quot; -&gt; Compass.SOUTH)
+<b class="fc">&nbsp;                Compass bearing = Compass.NORTH;</b>
+<b class="fc">&nbsp;                if (shipMap.containsKey(&quot;bearing&quot;)) {</b>
+&nbsp;                    try {
+<b class="fc">&nbsp;                        bearing = Compass.valueOf(((String) shipMap.get(&quot;bearing&quot;)).toUpperCase());</b>
+&nbsp;                    } catch (Exception e) {
+<b class="fc">&nbsp;                        bearing = Compass.NORTH;</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="fc">&nbsp;                List&lt;Map&lt;String, Object&gt;&gt; posList = (List&lt;Map&lt;String, Object&gt;&gt;) shipMap.get(&quot;positions&quot;);</b>
+&nbsp;
+<b class="pc">&nbsp;                if (posList != null &amp;&amp; !posList.isEmpty()) {</b>
+&nbsp;                    try {
+&nbsp;                        // 3. Extrair a posição inicial (primeiro elemento da lista)
+<b class="fc">&nbsp;                        Position firstPos = parsePositionFromMap(posList.get(0));</b>
+&nbsp;
+<b class="fc">&nbsp;                        if (firstPos == null) {</b>
+<b class="fc">&nbsp;                            System.out.println(&quot;Não foi possível determinar a posição inicial do navio: &quot; + category);</b>
+&nbsp;                            continue;
+&nbsp;                        }
+&nbsp;
+&nbsp;                        // 4. Construir e adicionar o navio à frota
+<b class="fc">&nbsp;                        IShip ship = Ship.buildShip(category, bearing, firstPos);</b>
+&nbsp;
+<b class="fc">&nbsp;                        if (ship != null) {</b>
+<b class="fc">&nbsp;                            fleet.addShip(ship);</b>
+&nbsp;                        } else {
+<b class="fc">&nbsp;                            System.out.println(&quot;Navio não reconhecido para a categoria: &quot; + category);</b>
+&nbsp;                        }
+&nbsp;                    } catch (Exception e) {
+<b class="fc">&nbsp;                        System.out.println(&quot;Erro ao recriar navio (&quot; + category + &quot;): &quot; + e.getMessage());</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // Instanciar o jogo com a frota restaurada
+<b class="fc">&nbsp;        Game restoredGame = new Game(fleet);</b>
+&nbsp;
+&nbsp;        // Restaurar contadores
+<b class="fc">&nbsp;        if (dados.containsKey(&quot;tirosInvalidos&quot;))</b>
+<b class="fc">&nbsp;            restoredGame.countInvalidShots = parseCoordinate(dados.get(&quot;tirosInvalidos&quot;));</b>
+<b class="fc">&nbsp;        if (dados.containsKey(&quot;tirosRepetidos&quot;))</b>
+<b class="fc">&nbsp;            restoredGame.countRepeatedShots = parseCoordinate(dados.get(&quot;tirosRepetidos&quot;));</b>
+<b class="fc">&nbsp;        if (dados.containsKey(&quot;acertos&quot;))</b>
+<b class="fc">&nbsp;            restoredGame.countHits = parseCoordinate(dados.get(&quot;acertos&quot;));</b>
+<b class="fc">&nbsp;        if (dados.containsKey(&quot;naviosAfundados&quot;))</b>
+<b class="fc">&nbsp;            restoredGame.countSinks = parseCoordinate(dados.get(&quot;naviosAfundados&quot;));</b>
+&nbsp;
+&nbsp;        // Restaurar histórico de jogadas do inimigo
+<b class="fc">&nbsp;        List&lt;Map&lt;String, Object&gt;&gt; tirosInimigo = (List&lt;Map&lt;String, Object&gt;&gt;) dados.get(&quot;tirosInimigo&quot;);</b>
+<b class="fc">&nbsp;        if (tirosInimigo != null) {</b>
+<b class="fc">&nbsp;            for (Map&lt;String, Object&gt; moveMap : tirosInimigo) {</b>
+<b class="fc">&nbsp;                List&lt;Map&lt;String, Object&gt;&gt; shotsList = (List&lt;Map&lt;String, Object&gt;&gt;) moveMap.get(&quot;shots&quot;);</b>
+<b class="fc">&nbsp;                if (shotsList != null) {</b>
+<b class="fc">&nbsp;                    List&lt;IPosition&gt; shots = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                    for (Map&lt;String, Object&gt; shotMap : shotsList) {</b>
+<b class="fc">&nbsp;                        Position shotPos = parsePositionFromMap(shotMap);</b>
+<b class="fc">&nbsp;                        if (shotPos != null) shots.add(shotPos);</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    if (!shots.isEmpty()) restoredGame.fireShots(shots);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return restoredGame;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Auxiliar para converter um Map com informações de posição para um objeto Position.
+&nbsp;     * Suporta tanto representações numéricas (row, column) como alfanuméricas (&quot;A&quot;, 3).
+&nbsp;     */
+&nbsp;    private static Position parsePositionFromMap(Map&lt;String, Object&gt; map) {
+<b class="fc">&nbsp;        if (map == null) return null;</b>
+&nbsp;
+<b class="fc">&nbsp;        Object rawRow = map.get(&quot;row&quot;);</b>
+<b class="fc">&nbsp;        Object rawCol = map.get(&quot;column&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        if (rawRow == null || rawCol == null) return null;</b>
+&nbsp;
+&nbsp;        // Caso a coluna seja dada por uma letra (ex: &quot;A&quot;, &quot;B&quot;, &#39;A&#39;)
+<b class="pc">&nbsp;        if (rawCol instanceof String &amp;&amp; ((String) rawCol).matches(&quot;[A-Za-z]&quot;)) {</b>
+<b class="fc">&nbsp;            char colChar = ((String) rawCol).toUpperCase().charAt(0);</b>
+<b class="fc">&nbsp;            int rowNum = parseCoordinate(rawRow);</b>
+<b class="fc">&nbsp;            return new Position(colChar, rowNum);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Caso a linha seja dada por uma letra
+<b class="pc">&nbsp;        if (rawRow instanceof String &amp;&amp; ((String) rawRow).matches(&quot;[A-Za-z]&quot;)) {</b>
+<b class="fc">&nbsp;            char colChar = ((String) rawRow).toUpperCase().charAt(0);</b>
+<b class="fc">&nbsp;            int rowNum = parseCoordinate(rawCol);</b>
+<b class="fc">&nbsp;            return new Position(colChar, rowNum);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Caso ambas sejam representações numéricas
+<b class="fc">&nbsp;        int r = parseCoordinate(rawRow);</b>
+<b class="fc">&nbsp;        int c = parseCoordinate(rawCol);</b>
+<b class="fc">&nbsp;        return new Position(r, c);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Auxiliar para converter com segurança qualquer valor (Number ou String) num int sem exceções de cast.
+&nbsp;     */
+&nbsp;    private static int parseCoordinate(Object value) {
+<b class="fc">&nbsp;        if (value instanceof Number) {</b>
+<b class="fc">&nbsp;            return ((Number) value).intValue();</b>
+<b class="fc">&nbsp;        } else if (value instanceof String) {</b>
+<b class="fc">&nbsp;            String str = ((String) value).trim();</b>
+<b class="fc">&nbsp;            if (str.length() == 1 &amp;&amp; Character.isLetter(str.charAt(0))) {</b>
+<b class="fc">&nbsp;                return Character.toUpperCase(str.charAt(0)) - &#39;A&#39;;</b>
+&nbsp;            }
+&nbsp;            try {
+<b class="fc">&nbsp;                return Integer.parseInt(str);</b>
+&nbsp;            } catch (NumberFormatException e) {
+<b class="fc">&nbsp;                return 0;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return 0;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-11-21 18:10</div>
+</div>
+</body>
+</html>
