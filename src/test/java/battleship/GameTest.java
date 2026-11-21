@@ -99,5 +99,126 @@ public class GameTest {
 		ship2.sink();
 		assertEquals(1, game.getRemainingShips(), "Remaining ships count should be 1 after sinking one of two ships.");
 	}
+	@Test
+	void gettersAndOver() {
+		assertNotNull(game.getMyFleet());
+		assertNotNull(game.getAlienFleet());
+		assertNotNull(game.getMyMoves());
+		assertTrue(game.getMyMoves().isEmpty());
+		assertEquals(0, game.getInvalidShots());
+		assertEquals(0, game.getHits());
+		assertEquals(0, game.getSunkShips());
+		assertDoesNotThrow(() -> game.over());
+	}
+	@Test
+	void fireSingleShotHitAndSink() {
+		Ship barge = new Barge(Compass.NORTH, new Position(1, 1));
+		game.getMyFleet().addShip(barge);
+
+		assertNotNull(game.fireSingleShot(new Position(0, 0), false));
+		assertEquals(0, game.getHits());
+		assertEquals(0, game.getSunkShips());
+
+		assertNotNull(game.fireSingleShot(new Position(1, 1), false));
+		assertEquals(1, game.getHits());
+		assertEquals(1, game.getSunkShips());
+	}
+	@Test
+	void fireSingleShotHitWithoutSinking() {
+		Ship caravel = new Caravel(Compass.EAST, new Position(3, 3));
+		game.getMyFleet().addShip(caravel);
+
+		assertNotNull(game.fireSingleShot(new Position(3, 3), false));
+		assertEquals(1, game.getHits());
+		assertEquals(0, game.getSunkShips());
+	}
+	@Test
+	void fireSingleShotRepeatedFromPreviousMove() {
+		game.fireShots(List.of(new Position(2, 3), new Position(2, 4), new Position(2, 5)));
+		assertNotNull(game.fireSingleShot(new Position(2, 3), false));
+		assertEquals(1, game.getRepeatedShots());
+	}
+	@Test
+	void fireShotsInvalidCount() {
+		assertThrows(IllegalArgumentException.class,
+				() -> game.fireShots(List.of(new Position(0, 0), new Position(0, 1))));
+	}
+	@Test
+	void fireShotsDuplicateInSameMove() {
+		Position p = new Position(4, 4);
+		game.fireShots(List.of(p, p, new Position(4, 5)));
+		assertEquals(1, game.getRepeatedShots());
+		assertEquals(1, game.getAlienMoves().size());
+	}
+	@Test
+	void readEnemyFireValidFormats() {
+		String json1 = game.readEnemyFire(new java.util.Scanner("A1 B2 C3\n"));
+		assertTrue(json1.contains("\"row\" : \"A\""));
+
+		String json2 = game.readEnemyFire(new java.util.Scanner("D 4 E 5 F 6\n"));
+		assertTrue(json2.contains("\"row\" : \"D\""));
+		assertEquals(2, game.getAlienMoves().size());
+	}
+	@Test
+	void readEnemyFireInvalidInputs() {
+		assertThrows(IllegalArgumentException.class,
+				() -> game.readEnemyFire(new java.util.Scanner("A\n")));
+		assertThrows(IllegalArgumentException.class,
+				() -> game.readEnemyFire(new java.util.Scanner("A1 B2\n")));
+	}
+	@Test
+	void randomEnemyFireScenarios() {
+		Ship barge = new Barge(Compass.NORTH, new Position(0, 0));
+		game.getMyFleet().addShip(barge);
+		barge.sink();
+
+		assertDoesNotThrow(() -> game.randomEnemyFire());
+
+		for (int r = 0; r < Game.BOARD_SIZE; r++) {
+			List<IPosition> batch = new java.util.ArrayList<>();
+			for (int c = 0; c < Game.BOARD_SIZE; c++) {
+				batch.add(new Position(r, c));
+				if (batch.size() == Game.NUMBER_SHOTS) {
+					game.fireShots(batch);
+					batch = new java.util.ArrayList<>();
+				}
+			}
+		}
+		List<IPosition> remaining = new java.util.ArrayList<>();
+		for (int r = 0; r < Game.BOARD_SIZE; r++) {
+			for (int c = 0; c < Game.BOARD_SIZE; c++) {
+				Position candidate = new Position(r, c);
+				if (!game.repeatedShot(candidate)) {
+					remaining.add(candidate);
+				}
+			}
+		}
+		if (remaining.size() >= Game.NUMBER_SHOTS) {
+			game.fireShots(remaining.subList(0, Game.NUMBER_SHOTS));
+		}
+		assertDoesNotThrow(() -> game.randomEnemyFire());
+	}
+	@Test
+	void printBoardsAndJsonShots() {
+		Ship barge = new Barge(Compass.NORTH, new Position(1, 1));
+		game.getMyFleet().addShip(barge);
+		barge.sink();
+
+		Move moveWithOutsideAndInside = new Move(
+				1,
+				List.of(new Position(1, 1), new Position(0, 0), new Position(-1, 0)),
+				List.of()
+		);
+		game.getAlienMoves().add(moveWithOutsideAndInside);
+
+		assertDoesNotThrow(() -> Game.printBoard(game.getMyFleet(), game.getAlienMoves(), false, false));
+		assertDoesNotThrow(() -> Game.printBoard(game.getMyFleet(), game.getAlienMoves(), true, true));
+		assertDoesNotThrow(() -> game.printMyBoard(true, true));
+		assertDoesNotThrow(() -> game.printAlienBoard(false, false));
+
+		String json = Game.jsonShots(List.of(new Position(0, 0), new Position(1, 1)));
+		assertTrue(json.contains("\"column\" : 1"));
+	}
+
 
 }
