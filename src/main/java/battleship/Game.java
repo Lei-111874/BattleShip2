@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import java.util.concurrent.TimeUnit;
-
 import java.util.*;
 
 public class Game implements IGame
@@ -133,19 +131,15 @@ public class Game implements IGame
 			simplifiedShots.add(simplePos);
 		}
 
-		String jsonString = null;
+
 		try {
 			// 2. Serialize the simplified list instead of the raw 'shots' list
-			jsonString = objectMapper.writeValueAsString(simplifiedShots);
+            System.out.println(objectMapper.writeValueAsString(simplifiedShots));
+			System.out.println();
+			return objectMapper.writeValueAsString(simplifiedShots);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("Erro ao serializar o JSON", e);
 		}
-
-		System.out.println(jsonString);
-		System.out.println();
-
-		// Retornar o JSON
-		return jsonString;
 	}
 
 	//------------------------------------------------------------------
@@ -226,15 +220,15 @@ public class Game implements IGame
 		// Criar uma instância de Random com uma seed baseada no timestamp atual
 		Random random = new Random(System.currentTimeMillis());
 
-		Set<IPosition> usablePositions = new HashSet<IPosition>();
+		Set<IPosition> availablePositions = new HashSet<IPosition>();
 		for (int r = 0; r < BOARD_SIZE; r++)
 			for (int c = 0; c < BOARD_SIZE; c++)
-				usablePositions.add(new Position(r, c));
+				availablePositions.add(new Position(r, c));
 
-		this.myFleet.getSunkShips().forEach(ship -> usablePositions.removeAll(ship.getAdjacentPositions()));
-		this.alienMoves.forEach(move ->  usablePositions.removeAll(move.getShots()));
+		this.myFleet.getSunkShips().forEach(ship -> ship.getAdjacentPositions().forEach(availablePositions::remove));
+		removeFiredShots(this, availablePositions);
 
-		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
+		List<IPosition> candidateShots = new ArrayList<>(availablePositions);
 
 		// Criar lista para armazenar os tiros
 		List<IPosition> shots = new ArrayList<IPosition>();
@@ -267,6 +261,10 @@ public class Game implements IGame
 		this.fireShots(shots);
 
 		return Game.jsonShots(shots);
+	}
+
+	private static void removeFiredShots(Game game, Set<IPosition> availablePositions) {
+		game.alienMoves.forEach(move ->  move.getShots().forEach(availablePositions::remove));
 	}
 
 
@@ -454,4 +452,5 @@ public class Game implements IGame
 			System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
 			System.out.println("+--------------------------------------------------------------+");
 	}
+	
 }

@@ -82,7 +82,10 @@ public class Tasks {
 						relogio.stop(); // Para a contagem
 						System.out.println("Tempo demorado a jogar: " + (relogio.getTime() / 1000.0) + " segundos.");
 
-						myFleet.printStatus();
+						IFleet currentFleet = game.getMyFleet();
+						if (currentFleet != null) {
+							currentFleet.printStatus();
+						}
 						game.printMyBoard(true, false);
 
 						if (game.getRemainingShips() == 0) {
@@ -102,13 +105,12 @@ public class Tasks {
 					if (game != null) {
 						while (game.getRemainingShips() > 0){
 							game.randomEnemyFire();
-							myFleet.printStatus();
-							game.printMyBoard(true, false);
-							try {
-								Thread.sleep(3000);
-							} catch (InterruptedException e) {
-								Thread.currentThread().interrupt(); // Best practice: restore interrupt status
+							IFleet currentFleet = game.getMyFleet();
+							if (currentFleet != null) {
+								currentFleet.printStatus();
 							}
+							game.printMyBoard(true, false);
+							waitBetweenSimulatedRounds();
 						}
 
 						if (game.getRemainingShips() == 0) {
@@ -165,6 +167,14 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	private static void waitBetweenSimulatedRounds() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt(); // Best practice: restore interrupt status
+		}
 	}
 
 	/**
