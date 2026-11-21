@@ -234,9 +234,9 @@ public class Save_LoadGameTest {
                 "      \"shots\": [\n" +
                 "        { \"row\": \"D\", \"column\": 2 },\n" +
                 "        { \"row\": 5, \"column\": 6 },\n" +
-                        "        { \"row\": 8, \"column\": 8 },\n" +
-                        "        { \"row\": 1 },\n" +
-                        "        null\n" +
+                "        { \"row\": 8, \"column\": 8 },\n" +
+                "        { \"row\": 1 },\n" +
+                "        null\n" +
                 "      ]\n" +
                 "    },\n" +
                 "    {\n" +
