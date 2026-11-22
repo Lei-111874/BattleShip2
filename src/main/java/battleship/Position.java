@@ -21,9 +21,6 @@ public class Position implements IPosition {
 	 */
 	private final int column;
 
-	/**
-	 * Indicates whether the position is occupied by a ship.
-	 */
 	private boolean isOccupied;
 
 	/**
@@ -48,7 +45,7 @@ public class Position implements IPosition {
 	public Position(char classicRow, int classicColumn) {
 		this.row = Character.toUpperCase(classicRow) - 'A';
 		this.column = classicColumn-1;
-		this.isOccupied = false;
+		this.setOccupied(false);
 		this.isHit = false;
 	}
 
@@ -62,7 +59,7 @@ public class Position implements IPosition {
 	public Position(int row, int column) {
 		this.row = row;
 		this.column = column;
-		this.isOccupied = false;
+		this.setOccupied(false);
 		this.isHit = false;
 	}
 
@@ -161,6 +158,8 @@ public class Position implements IPosition {
 	}
 
 	/**
+	 * Indicates whether the position is occupied by a ship.
+	 */ /**
 	 * Checks if this position is occupied by a ship.
 	 *
 	 * @return true if the position is occupied, false otherwise
@@ -185,7 +184,7 @@ public class Position implements IPosition {
 	 */
 	@Override
 	public void occupy() {
-		isOccupied = true;
+		setOccupied(true);
 	}
 
 	/**
@@ -222,7 +221,7 @@ public class Position implements IPosition {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(row, column, isOccupied, isHit);
+		return Objects.hash(row, column, isOccupied(), isHit);
 	}
 
 	/**
@@ -235,5 +234,9 @@ public class Position implements IPosition {
 	public String toString() {
 		return (char) ('A' + row) + "" + (column + 1);
 //		return "Row = " + (char) ('A' + row) + ", Column = " + (column + 1);
+	}
+
+	public void setOccupied(boolean occupied) {
+		isOccupied = occupied;
 	}
 }

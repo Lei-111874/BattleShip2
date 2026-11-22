@@ -24,6 +24,8 @@ public enum Compass
 	 */
 	WEST('o');
 
+	public static final char NORTHCHAR = 'n';
+
 	/**
 	 * Generate a random compass direction (bearing).
 	 *
@@ -83,7 +85,7 @@ public enum Compass
         Compass bearing;
         switch (ch)
         {
-        case 'n':
+        case NORTHCHAR:
             bearing = NORTH;
             break;
         case 's':

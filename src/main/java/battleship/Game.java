@@ -64,10 +64,11 @@ public class Game implements IGame
 				if (shot.isInside()){
 					int row = shot.getRow();
 					int col = shot.getColumn();
-					if (map[row][col] == SHIP_MARKER)
-						map[row][col] = SHOT_SHIP_MARKER;
-					if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
-						map[row][col] = SHOT_WATER_MARKER;
+					char currentCell = map[row][col];
+					if (currentCell == SHIP_MARKER)
+						currentCell = SHOT_SHIP_MARKER;
+					if (currentCell == EMPTY_MARKER || currentCell == SHIP_ADJACENT_MARKER)
+						currentCell = SHOT_WATER_MARKER;
 				}
 			}
 	}
@@ -356,7 +357,7 @@ public class Game implements IGame
 				availablePositions.add(new Position(r, c));
 
 		this.myFleet.getSunkShips().forEach(ship -> ship.getAdjacentPositions().forEach(availablePositions::remove));
-		removeFiredShots(this, availablePositions);
+		Fleet.removeFiredShots(this, availablePositions);
 
 		List<IPosition> candidateShots = new ArrayList<>(availablePositions);
 
@@ -393,10 +394,6 @@ public class Game implements IGame
 		return Game.jsonShots(shots);
 	}
 
-	private static void removeFiredShots(Game game, Set<IPosition> availablePositions) {
-		game.alienMoves.forEach(move ->  move.getShots().forEach(availablePositions::remove));
-	}
-
 
 	/**
 	 * Reads and processes the enemy fire input from the specified scanner.
@@ -423,21 +420,7 @@ public class Game implements IGame
 		Scanner inputScanner = new Scanner(input);
 		while (shots.size() < NUMBER_SHOTS && inputScanner.hasNext()) {
 			// Lê a próxima parte e constrói uma posição
-			String token = inputScanner.next();
-
-			if (token.matches("[A-Za-z]")) {
-				// Caso seja somente uma coluna ("A", "B", etc.), esperar o próximo número
-				if (inputScanner.hasNextInt()) {
-					int row = inputScanner.nextInt();
-					shots.add(new Position(token.toUpperCase().charAt(0), row));
-				} else {
-					throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
-				}
-			} else {
-				// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
-				Scanner singleScanner = new Scanner(token);
-				shots.add(Tasks.readClassicPosition(singleScanner));
-			}
+			readNextShot(inputScanner, shots);
 		}
 
 		if (shots.size() != NUMBER_SHOTS) {
@@ -447,6 +430,24 @@ public class Game implements IGame
 		this.fireShots(shots);
 
 		return Game.jsonShots(shots);
+	}
+
+	private static void readNextShot(Scanner inputScanner, List<IPosition> shots) {
+		String token = inputScanner.next();
+
+		if (token.matches("[A-Za-z]")) {
+			// Caso seja somente uma coluna ("A", "B", etc.), esperar o próximo número
+			if (inputScanner.hasNextInt()) {
+				int row = inputScanner.nextInt();
+				shots.add(new Position(token.toUpperCase().charAt(0), row));
+			} else {
+				throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
+			}
+		} else {
+			// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
+			Scanner singleScanner = new Scanner(token);
+			shots.add(Tasks.readClassicPosition(singleScanner));
+		}
 	}
 
 	/**
