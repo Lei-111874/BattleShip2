@@ -357,7 +357,7 @@ public class Game implements IGame
 				availablePositions.add(new Position(r, c));
 
 		this.myFleet.getSunkShips().forEach(ship -> ship.getAdjacentPositions().forEach(availablePositions::remove));
-		removeFiredShots(this, availablePositions);
+		Fleet.removeFiredShots(this, availablePositions);
 
 		List<IPosition> candidateShots = new ArrayList<>(availablePositions);
 
@@ -392,10 +392,6 @@ public class Game implements IGame
 		this.fireShots(shots);
 
 		return Game.jsonShots(shots);
-	}
-
-	private static void removeFiredShots(Game game, Set<IPosition> availablePositions) {
-		game.alienMoves.forEach(move ->  move.getShots().forEach(availablePositions::remove));
 	}
 
 

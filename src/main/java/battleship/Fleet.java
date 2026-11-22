@@ -5,6 +5,7 @@ package battleship;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -46,7 +47,11 @@ public class Fleet implements IFleet
 	ships = new ArrayList<>();
     }
 
-	/**
+    static void removeFiredShots(Game game, Set<IPosition> availablePositions) {
+        game.getAlienMoves().forEach(move ->  move.getShots().forEach(availablePositions::remove));
+    }
+
+    /**
 	 * Gets ships.
 	 *
 	 * @return the ships
