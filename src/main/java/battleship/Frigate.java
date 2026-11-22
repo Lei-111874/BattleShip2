@@ -18,13 +18,6 @@ public class Frigate extends Ship {
 	 */
 	public Frigate(Compass bearing, IPosition pos) {
 		super("Fragata", bearing, pos, 4);
-
-		if (bearing == Compass.NORTH || bearing == Compass.SOUTH) {
-			for (int r = 0; r < this.getSize(); r++)
-				getPositions().add(new Position(pos.getRow() + r, pos.getColumn()));
-		} else {
-			for (int c = 0; c < this.getSize(); c++)
-				getPositions().add(new Position(pos.getRow(), pos.getColumn() + c));
-		}
+		initializeStraightPositions(pos);
 	}
 }

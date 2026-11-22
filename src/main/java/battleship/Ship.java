@@ -147,6 +147,17 @@ public abstract class Ship implements IShip
 		return positions;
     }
 
+	protected final void initializeStraightPositions(IPosition startPosition)
+	{
+		if (getBearing() == Compass.NORTH || getBearing() == Compass.SOUTH) {
+			for (int rowOffset = 0; rowOffset < getSize(); rowOffset++)
+				positions.add(new Position(startPosition.getRow() + rowOffset, startPosition.getColumn()));
+		} else {
+			for (int columnOffset = 0; columnOffset < getSize(); columnOffset++)
+				positions.add(new Position(startPosition.getRow(), startPosition.getColumn() + columnOffset));
+		}
+	}
+
 	/**
 	 * Retrieves a list of positions adjacent to the ship's current positions.
 	 * Adjacent positions are defined as neighboring positions that are not

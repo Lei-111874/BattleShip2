@@ -12,6 +12,8 @@ import java.util.function.Function;
  */
 public class Fleet implements IFleet
 {
+	private final FleetPrinter fleetPrinter = new FleetPrinter(this);
+
 	/**
 	 * Creates a randomly generated fleet containing ships of various predefined types.
 	 * Each ship is assigned a random bearing and position. If a ship cannot be added
@@ -20,33 +22,11 @@ public class Fleet implements IFleet
 	 * @return a fully constructed and valid fleet as an instance of IFleet
 	 */
 	public static IFleet createRandom() {
-		return createRandom(type -> Ship.buildShip(type, Compass.randomBearing(), Position.randomPosition()));
+		return FleetFactory.createRandom();
 	}
 
 	static IFleet createRandom(Function<String, Ship> shipFactory) {
-		IFleet randomFleet = new Fleet();
-
-		// Define the types of ships to be added
-		String[] shipTypes =
-					{"galeao",                           // 1 galleon
-				 	"fragata",                           // 1 frigate
- 				 	"nau", "nau",                        // 2 carracks
-					"caravela", "caravela", "caravela",  // 3 caravels
-					"barca", "barca", "barca", "barca"}; // 4 barges
-
-		int fleetSize = 0;
-
-		while (fleetSize < shipTypes.length) {
-
-			// Build the ship
-			Ship ship = shipFactory.apply(shipTypes[fleetSize]);
-
-			// Attempt to add the ship to the fleet
-			if (ship != null && randomFleet.addShip(ship)) {
-				fleetSize++; // Increment count if ship is successfully added
-			}
-		}
-		return randomFleet;
+		return FleetFactory.createRandom(shipFactory);
 	}
 
 
@@ -215,10 +195,8 @@ public class Fleet implements IFleet
 	 */
 	public void printShips(List<IShip> ships)
 	{
-		assert ships != null;
 
-		for (IShip ship : ships)
-			System.out.println(ship);
+		fleetPrinter.printShips(ships);
 	}
 
 	/**
@@ -226,15 +204,15 @@ public class Fleet implements IFleet
 	 */
 	public void printStatus()
     {
-		System.out.println("Estado da Frota: " + this.getFloatingShips().size() + " a flutuar, " + this.getSunkShips().size() + " afundados!");
-//		printAllShips();
+		//		printAllShips();
 //		printFloatingShips();
 //		printShipsByCategory("Galeao");
 //		printShipsByCategory("Fragata");
 //		printShipsByCategory("Nau");
 //		printShipsByCategory("Caravela");
 //		printShipsByCategory("Barca");
-    }
+		fleetPrinter.printStatus();
+	}
 
 	/**
 	 * This operation prints all the ships of a fleet belonging to a particular
@@ -244,24 +222,23 @@ public class Fleet implements IFleet
 	 */
 	public void printShipsByCategory(String category)
     {
-		assert category != null;
 
-		printShips(getShipsLike(category));
-    }
+		fleetPrinter.printShipsByCategory(category);
+	}
 
 	/**
 	 * This operation prints all the ships of a fleet but not yet shot
 	 */
 	public void printFloatingShips()
     {
-	printShips(getFloatingShips());
-    }
+		fleetPrinter.printFloatingShips();
+	}
 
 	/**
 	 * This operation prints all the ships of a fleet
 	 */
 	void printAllShips()
     {
-		printShips(ships);
-    }
+		fleetPrinter.printAllShips();
+	}
 }
