@@ -64,10 +64,11 @@ public class Game implements IGame
 				if (shot.isInside()){
 					int row = shot.getRow();
 					int col = shot.getColumn();
-					if (map[row][col] == SHIP_MARKER)
-						map[row][col] = SHOT_SHIP_MARKER;
-					if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
-						map[row][col] = SHOT_WATER_MARKER;
+					char currentCell = map[row][col];
+					if (currentCell == SHIP_MARKER)
+						currentCell = SHOT_SHIP_MARKER;
+					if (currentCell == EMPTY_MARKER || currentCell == SHIP_ADJACENT_MARKER)
+						currentCell = SHOT_WATER_MARKER;
 				}
 			}
 	}
